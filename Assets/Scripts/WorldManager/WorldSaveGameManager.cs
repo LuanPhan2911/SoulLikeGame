@@ -18,17 +18,19 @@ public class WorldSaveGameManager : MonoBehaviour
         {
             Instance = this;
         }
-
-
-    }
-    private void Start()
-    {
         DontDestroyOnLoad(gameObject);
+
+
     }
+
 
     public IEnumerator LoadNewGame()
     {
         AsyncOperation loadScene = SceneManager.LoadSceneAsync(worldSceneIndex);
         yield return null;
+    }
+    public int GetWorldSceneIndex()
+    {
+        return worldSceneIndex;
     }
 }
