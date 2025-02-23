@@ -6,6 +6,7 @@ public class WorldSaveGameManager : MonoBehaviour
 {
     public static WorldSaveGameManager Instance { get; private set; }
     [SerializeField] private int worldSceneIndex = 1;
+    [SerializeField] private int targetFrameRate = 60;
 
     private void Awake()
     {
@@ -22,7 +23,10 @@ public class WorldSaveGameManager : MonoBehaviour
 
 
     }
-
+    private void Start()
+    {
+        Application.targetFrameRate = targetFrameRate;
+    }
 
     public IEnumerator LoadNewGame()
     {

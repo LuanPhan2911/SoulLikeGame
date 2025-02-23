@@ -10,6 +10,10 @@ public class PlayerManager : CharacterManager
     override protected void Update()
     {
         base.Update();
+        if (!IsOwner)
+        {
+            return;
+        }
         playerLocoMotionManager.HandleAllMovement();
     }
 }

@@ -19,6 +19,10 @@ public class PlayerUIManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);
     }
+    public void SetStartGameAsClient(bool startGameAsClient)
+    {
+        this.startGameAsClient = startGameAsClient;
+    }
 
 
 

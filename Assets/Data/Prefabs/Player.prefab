@@ -207,6 +207,8 @@ GameObject:
   - component: {fileID: 332562030815592503}
   - component: {fileID: -3465117611084132606}
   - component: {fileID: 1828295966867136529}
+  - component: {fileID: -3254467698988339150}
+  - component: {fileID: 7433870203906628373}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -266,7 +268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 4249209705
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 4249209705
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -290,6 +292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a0b74eda07fe7845965642ff2fbbcd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  characterController: {fileID: 0}
+  characterNetworkManager: {fileID: 0}
 --- !u!114 &1828295966867136529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,6 +307,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16c5ff424eb8454d85dcb9a6807160e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  horizontalMovement: 0
+  verticalMovement: 0
+  moveAmount: 0
+  walkingSpeed: 2
+  runningSpeed: 5
+--- !u!114 &-3254467698988339150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773795917509556872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07d89865c1af0664a90c68eee3148f69, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  networkPositionVelocity: {x: 0, y: 0, z: 0}
+  networkSmoothTimer: 0.1
+--- !u!143 &7433870203906628373
+CharacterController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773795917509556872}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Height: 1.9
+  m_Radius: 0.19
+  m_SlopeLimit: 45
+  m_StepOffset: 0.3
+  m_SkinWidth: 0.08
+  m_MinMoveDistance: 0.001
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!1 &983205978561468535
 GameObject:
   m_ObjectHideFlags: 0
