@@ -26,8 +26,8 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
     }
     private void GetVerticalAndHorizontalInput()
     {
-        verticalMovement = PlayerInputManager.Instance.GetVerticalInput();
-        horizontalMovement = PlayerInputManager.Instance.GetHorizontalInput();
+        verticalMovement = PlayerInputManager.Instance.GetPlayerVerticalInput();
+        horizontalMovement = PlayerInputManager.Instance.GetPlayerHorizontalInput();
     }
     private void HandleGroundMovement()
     {
@@ -37,12 +37,12 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         moveDirection.Normalize();
         moveDirection.y = 0;
 
-        if (PlayerInputManager.Instance.GetMoveAmount() > 0.5f)
+        if (PlayerInputManager.Instance.GetPlayerMoveAmount() > 0.5f)
         {
             //move at running speed
             playerManager.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
         }
-        else if (PlayerInputManager.Instance.GetMoveAmount() >= 0.5f)
+        else if (PlayerInputManager.Instance.GetPlayerMoveAmount() >= 0.5f)
         {
             //move at walking speed
             playerManager.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);

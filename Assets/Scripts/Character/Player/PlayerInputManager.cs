@@ -5,9 +5,15 @@ public class PlayerInputManager : MonoBehaviour
 {
 
     PlayerControls playerControls;
-    private Vector2 movementInput;
-    private float verticalInput, horizontalInput;
-    private float moveAmount;
+
+    [Header("Player movement")]
+    private Vector2 playerMovementInput;
+    private float playerVerticalInput, playerHorizontalInput;
+    private float playerMoveAmount;
+
+    [Header("Camera movement")]
+    private Vector2 cameraMovementInput;
+    private float cameraVerticalInput, cameraHorizontalInput;
 
     public static PlayerInputManager Instance { get; private set; }
 
@@ -63,7 +69,8 @@ public class PlayerInputManager : MonoBehaviour
         if (playerControls == null)
         {
             playerControls = new PlayerControls();
-            playerControls.Player.Move.performed += (ctx) => movementInput = ctx.ReadValue<Vector2>();
+            playerControls.Player.Move.performed += (ctx) => playerMovementInput = ctx.ReadValue<Vector2>();
+            playerControls.Player.Look.performed += (ctx) => cameraMovementInput = ctx.ReadValue<Vector2>();
 
             playerControls.Enable();
         }
@@ -75,37 +82,52 @@ public class PlayerInputManager : MonoBehaviour
     private void Update()
     {
 
-        HandleMovementInput();
+        HandlePlayerMovementInput();
+        HandleCameraMoventmentInput();
 
     }
-    private void HandleMovementInput()
+    private void HandlePlayerMovementInput()
     {
 
 
-        verticalInput = movementInput.y;
-        horizontalInput = movementInput.x;
-        moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + Mathf.Abs(verticalInput));
+        playerVerticalInput = playerMovementInput.y;
+        playerHorizontalInput = playerMovementInput.x;
+        playerMoveAmount = Mathf.Clamp01(Mathf.Abs(playerHorizontalInput) + Mathf.Abs(playerVerticalInput));
 
-        if (moveAmount <= 0.5f)
+        if (playerMoveAmount <= 0.5f)
         {
-            moveAmount = 0.5f;
+            playerMoveAmount = 0.5f;
         }
-        else if (moveAmount > 0.5f)
+        else if (playerMoveAmount > 0.5f)
         {
-            moveAmount = 1f;
+            playerMoveAmount = 1f;
         }
+    }
+    private void HandleCameraMoventmentInput()
+    {
+        cameraVerticalInput = cameraMovementInput.y;
+        cameraHorizontalInput = cameraMovementInput.x;
     }
 
-    public float GetMoveAmount()
+    public float GetPlayerMoveAmount()
     {
-        return moveAmount;
+        return playerMoveAmount;
     }
-    public float GetVerticalInput()
+    public float GetPlayerVerticalInput()
     {
-        return verticalInput;
+        return playerVerticalInput;
     }
-    public float GetHorizontalInput()
+    public float GetPlayerHorizontalInput()
     {
-        return horizontalInput;
+        return playerHorizontalInput;
+    }
+
+    public float GetCameraVerticalInput()
+    {
+        return cameraVerticalInput;
+    }
+    public float GetCameraHorizontalInput()
+    {
+        return cameraHorizontalInput;
     }
 }
