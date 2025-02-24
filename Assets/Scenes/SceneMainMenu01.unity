@@ -1762,13 +1762,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3133005071548617555, guid: a1b9b86785011344089697eeaa797a53, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4448128556648910378, guid: a1b9b86785011344089697eeaa797a53, type: 3}
-      propertyPath: upAndDownRotationgSpeed
-      value: 30
+      propertyPath: upAndDownRotationSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4448128556648910378, guid: a1b9b86785011344089697eeaa797a53, type: 3}
+      propertyPath: collisionWithLayer.m_Bits
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4448128556648910378, guid: a1b9b86785011344089697eeaa797a53, type: 3}
       propertyPath: leftAndRightTotationSpeed
-      value: 30
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 8838034286276456902, guid: a1b9b86785011344089697eeaa797a53, type: 3}
       propertyPath: m_Name

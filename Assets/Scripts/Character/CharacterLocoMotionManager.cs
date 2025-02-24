@@ -7,4 +7,7 @@ public class CharacterLocoMotionManager : MonoBehaviour
     {
 
     }
+    protected virtual void Update()
+    {
+    }
 }

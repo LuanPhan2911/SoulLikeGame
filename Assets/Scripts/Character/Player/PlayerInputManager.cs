@@ -5,6 +5,7 @@ public class PlayerInputManager : MonoBehaviour
 {
 
     PlayerControls playerControls;
+    [HideInInspector] public PlayerManager playerManager;
 
     [Header("Player movement")]
     private Vector2 playerMovementInput;
@@ -83,7 +84,7 @@ public class PlayerInputManager : MonoBehaviour
     {
 
         HandlePlayerMovementInput();
-        HandleCameraMoventmentInput();
+        HandleCameraMovementInput();
 
     }
     private void HandlePlayerMovementInput()
@@ -94,16 +95,19 @@ public class PlayerInputManager : MonoBehaviour
         playerHorizontalInput = playerMovementInput.x;
         playerMoveAmount = Mathf.Clamp01(Mathf.Abs(playerHorizontalInput) + Mathf.Abs(playerVerticalInput));
 
-        if (playerMoveAmount <= 0.5f)
+        if (Input.GetKey(KeyCode.LeftControl) && playerMoveAmount > 0)
         {
             playerMoveAmount = 0.5f;
         }
-        else if (playerMoveAmount > 0.5f)
+
+
+        if (playerManager.playerAnimatorManager != null)
         {
-            playerMoveAmount = 1f;
+            playerManager.playerAnimatorManager.UpdateMovementParameters(0, playerMoveAmount);
         }
+
     }
-    private void HandleCameraMoventmentInput()
+    private void HandleCameraMovementInput()
     {
         cameraVerticalInput = cameraMovementInput.y;
         cameraHorizontalInput = cameraMovementInput.x;

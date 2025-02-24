@@ -18,6 +18,25 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         base.Awake();
         playerManager = GetComponent<PlayerManager>();
     }
+    override protected void Update()
+    {
+        base.Update();
+        if (playerManager.IsOwner)
+        {
+            playerManager.characterNetworkManager.SetNetworkMoveAmount(moveAmount);
+            playerManager.characterNetworkManager.SetHorizontalParameter(horizontalMovement);
+            playerManager.characterNetworkManager.SetVerticalParameter(verticalMovement);
+        }
+        else
+        {
+            moveAmount = playerManager.characterNetworkManager.GetNetworkMoveAmount();
+            horizontalMovement = playerManager.characterNetworkManager.GetHorizontalParameter();
+            verticalMovement = playerManager.characterNetworkManager.GetVerticalParameter();
+
+            playerManager.playerAnimatorManager.UpdateMovementParameters(0, moveAmount);
+        }
+
+    }
 
     public void HandleAllMovement()
     {
@@ -28,6 +47,7 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
     {
         verticalMovement = PlayerInputManager.Instance.GetPlayerVerticalInput();
         horizontalMovement = PlayerInputManager.Instance.GetPlayerHorizontalInput();
+        moveAmount = PlayerInputManager.Instance.GetPlayerMoveAmount();
     }
     private void HandleGroundMovement()
     {

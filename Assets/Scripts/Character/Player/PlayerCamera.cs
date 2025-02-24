@@ -6,7 +6,7 @@ public class PlayerCamera : MonoBehaviour
     public static PlayerCamera Instance { get; private set; }
 
     public Camera cameraObject;
-    public PlayerManager playerManager;
+    [HideInInspector] public PlayerManager playerManager;
     [SerializeField] private Transform pivotCameraTransform;
 
     [Header("Camera setting")]

@@ -15,6 +15,14 @@ public class CharacterNetworkManager : NetworkBehaviour
     public float networkMovementSmoothTimer = 0.1f;
     public float networkRotationSmoothTimer = 0.1f;
 
+    [Header("Animator Parameters")]
+    private NetworkVariable<float> animatorVeticalParameter = new NetworkVariable<float>(0,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<float> animatorHorizontalParameter = new NetworkVariable<float>(0,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    private NetworkVariable<float> networkMoveAmount = new NetworkVariable<float>(0,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
     public void SetNetworkPosition(Vector3 position)
     {
         networkPosition.Value = position;
@@ -24,6 +32,18 @@ public class CharacterNetworkManager : NetworkBehaviour
         networkRotation.Value = rotation;
     }
 
+    public void SetNetworkMoveAmount(float moveAmount)
+    {
+        networkMoveAmount.Value = moveAmount;
+    }
+    public void SetHorizontalParameter(float horizontal)
+    {
+        animatorHorizontalParameter.Value = horizontal;
+    }
+    public void SetVerticalParameter(float vertical)
+    {
+        animatorVeticalParameter.Value = vertical;
+    }
     public Vector3 GetNetworkPosition()
     {
         return networkPosition.Value;
@@ -31,6 +51,18 @@ public class CharacterNetworkManager : NetworkBehaviour
     public Quaternion GetNetworkRotation()
     {
         return networkRotation.Value;
+    }
+    public float GetNetworkMoveAmount()
+    {
+        return networkMoveAmount.Value;
+    }
+    public float GetHorizontalParameter()
+    {
+        return animatorHorizontalParameter.Value;
+    }
+    public float GetVerticalParameter()
+    {
+        return animatorVeticalParameter.Value;
     }
 
 }
