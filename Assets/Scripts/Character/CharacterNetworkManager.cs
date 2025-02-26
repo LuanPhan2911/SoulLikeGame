@@ -23,6 +23,32 @@ public class CharacterNetworkManager : NetworkBehaviour
     private NetworkVariable<float> networkMoveAmount = new NetworkVariable<float>(0,
         NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+    private CharacterManager characterManager;
+
+    protected virtual void Awake()
+    {
+        characterManager = GetComponent<CharacterManager>();
+    }
+
+
+    [ServerRpc]
+    public void PlayActionAnimationServerRPC(ulong clientId, string animationId, bool applyRootMotion)
+    {
+        if (IsServer)
+        {
+            PlayActionAnimationClientRPC(clientId, animationId, applyRootMotion);
+        }
+    }
+    [ClientRpc]
+    private void PlayActionAnimationClientRPC(ulong clientId, string animationId, bool applyRootMotion)
+    {
+        if (clientId != NetworkManager.Singleton.LocalClientId)
+        {
+            characterManager.animator.CrossFade(animationId, 0.2f);
+            characterManager.applyRootMotion = applyRootMotion;
+        }
+    }
+
     public void SetNetworkPosition(Vector3 position)
     {
         networkPosition.Value = position;

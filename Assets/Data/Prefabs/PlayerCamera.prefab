@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7983070310237255371}
   - component: {fileID: 6427575723232413164}
   - component: {fileID: 7267602176366233874}
+  - component: {fileID: 6277051500674547956}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -128,6 +129,14 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!81 &6277051500674547956
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6324326645363862991}
+  m_Enabled: 1
 --- !u!1 &8399244753838677766
 GameObject:
   m_ObjectHideFlags: 0
@@ -206,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraObject: {fileID: 6427575723232413164}
-  playerManager: {fileID: 0}
+  player: {fileID: 0}
   pivotCameraTransform: {fileID: 3133005071548617555}
   upAndDownRotationSpeed: 30
   leftAndRightTotationSpeed: 30

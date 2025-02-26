@@ -5,7 +5,7 @@ public class PlayerInputManager : MonoBehaviour
 {
 
     PlayerControls playerControls;
-    [HideInInspector] public PlayerManager playerManager;
+    [HideInInspector] public PlayerManager player;
 
     [Header("Player movement")]
     private Vector2 playerMovementInput;
@@ -15,6 +15,9 @@ public class PlayerInputManager : MonoBehaviour
     [Header("Camera movement")]
     private Vector2 cameraMovementInput;
     private float cameraVerticalInput, cameraHorizontalInput;
+
+    [Header("Player action")]
+    [SerializeField] private bool dodgeInput = false;
 
     public static PlayerInputManager Instance { get; private set; }
 
@@ -72,6 +75,7 @@ public class PlayerInputManager : MonoBehaviour
             playerControls = new PlayerControls();
             playerControls.Player.Move.performed += (ctx) => playerMovementInput = ctx.ReadValue<Vector2>();
             playerControls.Player.Look.performed += (ctx) => cameraMovementInput = ctx.ReadValue<Vector2>();
+            playerControls.Player.Crouch.performed += (ctx) => dodgeInput = true;
 
             playerControls.Enable();
         }
@@ -82,10 +86,14 @@ public class PlayerInputManager : MonoBehaviour
     }
     private void Update()
     {
+        HandleAllInput();
 
+    }
+    private void HandleAllInput()
+    {
         HandlePlayerMovementInput();
         HandleCameraMovementInput();
-
+        HandleDodgeInput();
     }
     private void HandlePlayerMovementInput()
     {
@@ -95,15 +103,11 @@ public class PlayerInputManager : MonoBehaviour
         playerHorizontalInput = playerMovementInput.x;
         playerMoveAmount = Mathf.Clamp01(Mathf.Abs(playerHorizontalInput) + Mathf.Abs(playerVerticalInput));
 
-        if (Input.GetKey(KeyCode.LeftControl) && playerMoveAmount > 0)
-        {
-            playerMoveAmount = 0.5f;
-        }
 
 
-        if (playerManager.playerAnimatorManager != null)
+        if (player.playerAnimator != null)
         {
-            playerManager.playerAnimatorManager.UpdateMovementParameters(0, playerMoveAmount);
+            player.playerAnimator.UpdateMovementParameters(0, playerMoveAmount);
         }
 
     }
@@ -111,6 +115,14 @@ public class PlayerInputManager : MonoBehaviour
     {
         cameraVerticalInput = cameraMovementInput.y;
         cameraHorizontalInput = cameraMovementInput.x;
+    }
+    private void HandleDodgeInput()
+    {
+        if (dodgeInput)
+        {
+            dodgeInput = false;
+            player.playerLocoMotion.AttemptToPerformDodge();
+        }
     }
 
     public float GetPlayerMoveAmount()

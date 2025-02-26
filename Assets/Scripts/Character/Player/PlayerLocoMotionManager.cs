@@ -2,9 +2,10 @@ using UnityEngine;
 
 public class PlayerLocoMotionManager : CharacterLocoMotionManager
 {
-    private PlayerManager playerManager;
-    public float horizontalMovement, verticalMovement;
-    public float moveAmount;
+    [HideInInspector] private PlayerManager player;
+    [Header("Movement Parameters")]
+    [HideInInspector] public float horizontalMovement, verticalMovement;
+    [HideInInspector] public float moveAmount;
 
     private Vector3 moveDirection;
     [SerializeField] private float walkingSpeed = 2f;
@@ -12,34 +13,37 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
     [SerializeField] private float rotationSpeed = 10f;
 
     private Vector3 targetRotationDirection;
+    [Header("Dodge Parameters")]
+    private Vector3 rollDirection;
 
     override protected void Awake()
     {
         base.Awake();
-        playerManager = GetComponent<PlayerManager>();
+        player = GetComponent<PlayerManager>();
     }
     override protected void Update()
     {
         base.Update();
-        if (playerManager.IsOwner)
+        if (player.IsOwner)
         {
-            playerManager.characterNetworkManager.SetNetworkMoveAmount(moveAmount);
-            playerManager.characterNetworkManager.SetHorizontalParameter(horizontalMovement);
-            playerManager.characterNetworkManager.SetVerticalParameter(verticalMovement);
+            player.characterNetwork.SetNetworkMoveAmount(moveAmount);
+            player.characterNetwork.SetHorizontalParameter(horizontalMovement);
+            player.characterNetwork.SetVerticalParameter(verticalMovement);
         }
         else
         {
-            moveAmount = playerManager.characterNetworkManager.GetNetworkMoveAmount();
-            horizontalMovement = playerManager.characterNetworkManager.GetHorizontalParameter();
-            verticalMovement = playerManager.characterNetworkManager.GetVerticalParameter();
+            moveAmount = player.characterNetwork.GetNetworkMoveAmount();
+            horizontalMovement = player.characterNetwork.GetHorizontalParameter();
+            verticalMovement = player.characterNetwork.GetVerticalParameter();
 
-            playerManager.playerAnimatorManager.UpdateMovementParameters(0, moveAmount);
+            player.playerAnimator.UpdateMovementParameters(0, moveAmount);
         }
 
     }
 
     public void HandleAllMovement()
     {
+
         HandleGroundMovement();
         HandleRotation();
     }
@@ -51,7 +55,12 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
     }
     private void HandleGroundMovement()
     {
+        if (!player.canMove)
+        {
+            return;
+        }
         GetVerticalAndHorizontalInput();
+
         moveDirection = PlayerCamera.Instance.transform.forward * verticalMovement;
         moveDirection += PlayerCamera.Instance.transform.right * horizontalMovement;
         moveDirection.Normalize();
@@ -60,16 +69,20 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         if (PlayerInputManager.Instance.GetPlayerMoveAmount() > 0.5f)
         {
             //move at running speed
-            playerManager.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
+            player.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
         }
         else if (PlayerInputManager.Instance.GetPlayerMoveAmount() >= 0.5f)
         {
             //move at walking speed
-            playerManager.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
+            player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
         }
     }
     private void HandleRotation()
     {
+        if (!player.canRotate)
+        {
+            return;
+        }
         targetRotationDirection = Vector3.zero;
         targetRotationDirection = PlayerCamera.Instance.cameraObject.transform.forward * verticalMovement;
         targetRotationDirection += PlayerCamera.Instance.cameraObject.transform.right * horizontalMovement;
@@ -81,5 +94,31 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         }
         Quaternion newRotation = Quaternion.LookRotation(targetRotationDirection);
         transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * rotationSpeed);
+    }
+
+    public void AttemptToPerformDodge()
+    {
+        if (player.isPerformingAction)
+        {
+            return;
+        }
+        if (PlayerInputManager.Instance.GetPlayerMoveAmount() > 0)
+        {
+            rollDirection = PlayerCamera.Instance.cameraObject.transform.forward * verticalMovement;
+            rollDirection += PlayerCamera.Instance.cameraObject.transform.right * horizontalMovement;
+            rollDirection.Normalize();
+            rollDirection.y = 0;
+
+            Quaternion playerRotation = Quaternion.LookRotation(rollDirection);
+            player.transform.rotation = playerRotation;
+            // perform roll animation
+
+            player.playerAnimator.PlayerTargetActionAnimation("Roll_Forward_01", true, true);
+        }
+        else
+        {
+            player.playerAnimator.PlayerTargetActionAnimation("Back_Step_01", true, true);
+            // perform backstep animation
+        }
     }
 }

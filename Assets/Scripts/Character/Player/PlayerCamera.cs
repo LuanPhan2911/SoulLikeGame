@@ -6,7 +6,7 @@ public class PlayerCamera : MonoBehaviour
     public static PlayerCamera Instance { get; private set; }
 
     public Camera cameraObject;
-    [HideInInspector] public PlayerManager playerManager;
+    [HideInInspector] public PlayerManager player;
     [SerializeField] private Transform pivotCameraTransform;
 
     [Header("Camera setting")]
@@ -50,7 +50,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void HandleAllCameraActions()
     {
-        if (playerManager != null)
+        if (player != null)
         {
             // follow player
             HandleFollowTarget();
@@ -64,7 +64,7 @@ public class PlayerCamera : MonoBehaviour
     }
     private void HandleFollowTarget()
     {
-        Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, playerManager.transform.position,
+        Vector3 targetCameraPosition = Vector3.SmoothDamp(transform.position, player.transform.position,
             ref cameraVelocity, cameraSmoothSpeed * Time.deltaTime);
         transform.position = targetCameraPosition;
     }

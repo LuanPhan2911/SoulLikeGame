@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class PlayerManager : CharacterManager
 {
-    [HideInInspector] public PlayerLocoMotionManager playerLocoMotionManager;
-    [HideInInspector] public PlayerAnimatorManager playerAnimatorManager;
+    [HideInInspector] public PlayerLocoMotionManager playerLocoMotion;
+    [HideInInspector] public PlayerAnimatorManager playerAnimator;
     protected override void Awake()
     {
         base.Awake();
-        playerLocoMotionManager = GetComponent<PlayerLocoMotionManager>();
-        playerAnimatorManager = GetComponent<PlayerAnimatorManager>();
+        playerLocoMotion = GetComponent<PlayerLocoMotionManager>();
+        playerAnimator = GetComponent<PlayerAnimatorManager>();
     }
 
     protected override void Update()
@@ -18,7 +18,7 @@ public class PlayerManager : CharacterManager
         {
             return;
         }
-        playerLocoMotionManager.HandleAllMovement();
+        playerLocoMotion.HandleAllMovement();
     }
     protected override void LateUpdate()
     {
@@ -37,8 +37,8 @@ public class PlayerManager : CharacterManager
         base.OnNetworkSpawn();
         if (IsOwner)
         {
-            PlayerCamera.Instance.playerManager = this;
-            PlayerInputManager.Instance.playerManager = this;
+            PlayerCamera.Instance.player = this;
+            PlayerInputManager.Instance.player = this;
         }
     }
 }
