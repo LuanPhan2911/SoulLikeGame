@@ -5,6 +5,10 @@ public class CharacterAnimatorManager : MonoBehaviour
 {
     CharacterManager character;
 
+
+    private const string HORIZONTAL = "Horizontal";
+    private const string VERTICAL = "Vertical";
+
     protected virtual void Awake()
     {
         character = GetComponent<CharacterManager>();
@@ -12,10 +16,17 @@ public class CharacterAnimatorManager : MonoBehaviour
 
 
 
-    public void UpdateMovementParameters(float horizontalValue, float verticalValue)
+    public void UpdateMovementParameters(float horizontalValue, float verticalValue, bool isSpriting)
     {
-        character.animator.SetFloat("Horizontal", horizontalValue, 0.1f, Time.deltaTime);
-        character.animator.SetFloat("Vertical", verticalValue, 0.1f, Time.deltaTime);
+        float horizontal = horizontalValue;
+        float vertical = verticalValue;
+        if (isSpriting)
+        {
+            vertical = 2;
+        }
+
+        character.animator.SetFloat(HORIZONTAL, horizontal, 0.1f, Time.deltaTime);
+        character.animator.SetFloat(VERTICAL, vertical, 0.1f, Time.deltaTime);
     }
     public void PlayerTargetActionAnimation(
         string targetAnimation,

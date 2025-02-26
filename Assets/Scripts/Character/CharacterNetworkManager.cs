@@ -4,12 +4,7 @@ using UnityEngine;
 public class CharacterNetworkManager : NetworkBehaviour
 {
 
-    [Header("Position")]
-    private NetworkVariable<Vector3> networkPosition = new NetworkVariable<Vector3>(Vector3.zero,
-        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
-    private NetworkVariable<Quaternion> networkRotation = new NetworkVariable<Quaternion>(Quaternion.identity,
-     NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     public Vector3 networkPositionVelocity;
     public float networkMovementSmoothTimer = 0.1f;
@@ -23,6 +18,9 @@ public class CharacterNetworkManager : NetworkBehaviour
     private NetworkVariable<float> networkMoveAmount = new NetworkVariable<float>(0,
         NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
+    [Header("Flags")]
+    private NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     private CharacterManager characterManager;
 
     protected virtual void Awake()
@@ -49,14 +47,7 @@ public class CharacterNetworkManager : NetworkBehaviour
         }
     }
 
-    public void SetNetworkPosition(Vector3 position)
-    {
-        networkPosition.Value = position;
-    }
-    public void SetNetworkRoation(Quaternion rotation)
-    {
-        networkRotation.Value = rotation;
-    }
+
 
     public void SetNetworkMoveAmount(float moveAmount)
     {
@@ -70,14 +61,11 @@ public class CharacterNetworkManager : NetworkBehaviour
     {
         animatorVeticalParameter.Value = vertical;
     }
-    public Vector3 GetNetworkPosition()
+    public void SetIsSprinting(bool sprinting)
     {
-        return networkPosition.Value;
+        isSprinting.Value = sprinting;
     }
-    public Quaternion GetNetworkRotation()
-    {
-        return networkRotation.Value;
-    }
+
     public float GetNetworkMoveAmount()
     {
         return networkMoveAmount.Value;
@@ -89,6 +77,10 @@ public class CharacterNetworkManager : NetworkBehaviour
     public float GetVerticalParameter()
     {
         return animatorVeticalParameter.Value;
+    }
+    public bool GetIsSprinting()
+    {
+        return isSprinting.Value;
     }
 
 }

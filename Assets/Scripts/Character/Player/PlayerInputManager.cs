@@ -18,6 +18,7 @@ public class PlayerInputManager : MonoBehaviour
 
     [Header("Player action")]
     [SerializeField] private bool dodgeInput = false;
+    [SerializeField] private bool sprintInput = false;
 
     public static PlayerInputManager Instance { get; private set; }
 
@@ -76,6 +77,9 @@ public class PlayerInputManager : MonoBehaviour
             playerControls.Player.Move.performed += (ctx) => playerMovementInput = ctx.ReadValue<Vector2>();
             playerControls.Player.Look.performed += (ctx) => cameraMovementInput = ctx.ReadValue<Vector2>();
             playerControls.Player.Crouch.performed += (ctx) => dodgeInput = true;
+            playerControls.Player.Sprint.performed += (ctx) => sprintInput = true;
+            playerControls.Player.Sprint.canceled += (ctx) => sprintInput = false;
+
 
             playerControls.Enable();
         }
@@ -94,6 +98,7 @@ public class PlayerInputManager : MonoBehaviour
         HandlePlayerMovementInput();
         HandleCameraMovementInput();
         HandleDodgeInput();
+        HandleSprinting();
     }
     private void HandlePlayerMovementInput()
     {
@@ -104,11 +109,11 @@ public class PlayerInputManager : MonoBehaviour
         playerMoveAmount = Mathf.Clamp01(Mathf.Abs(playerHorizontalInput) + Mathf.Abs(playerVerticalInput));
 
 
-
         if (player.playerAnimator != null)
         {
-            player.playerAnimator.UpdateMovementParameters(0, playerMoveAmount);
+            player.playerAnimator.UpdateMovementParameters(0, playerMoveAmount, player.playerNetwork.GetIsSprinting());
         }
+
 
     }
     private void HandleCameraMovementInput()
@@ -122,6 +127,17 @@ public class PlayerInputManager : MonoBehaviour
         {
             dodgeInput = false;
             player.playerLocoMotion.AttemptToPerformDodge();
+        }
+    }
+    private void HandleSprinting()
+    {
+        if (sprintInput)
+        {
+            player.playerLocoMotion.HandleSprinting();
+        }
+        else
+        {
+            player.characterNetwork.SetIsSprinting(false);
         }
     }
 
