@@ -12,6 +12,8 @@ public class CharacterManager : NetworkBehaviour
     public bool canRotate = true;
     public bool canMove = true;
     public bool applyRootMotion = false;
+
+
     protected virtual void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -30,4 +32,5 @@ public class CharacterManager : NetworkBehaviour
     {
 
     }
+
 }

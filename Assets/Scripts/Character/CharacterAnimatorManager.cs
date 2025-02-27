@@ -16,13 +16,17 @@ public class CharacterAnimatorManager : MonoBehaviour
 
 
 
-    public void UpdateMovementParameters(float horizontalValue, float verticalValue, bool isSpriting)
+    public void UpdateMovementParameters(float horizontalValue, float verticalValue, bool isSpriting, bool isWalking)
     {
         float horizontal = horizontalValue;
         float vertical = verticalValue;
         if (isSpriting)
         {
-            vertical = 2;
+            vertical = 3;
+        }
+        else if (isWalking)
+        {
+            vertical = 1;
         }
 
         character.animator.SetFloat(HORIZONTAL, horizontal, 0.1f, Time.deltaTime);

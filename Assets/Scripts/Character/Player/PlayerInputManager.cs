@@ -19,6 +19,7 @@ public class PlayerInputManager : MonoBehaviour
     [Header("Player action")]
     [SerializeField] private bool dodgeInput = false;
     [SerializeField] private bool sprintInput = false;
+    [SerializeField] private bool walkInput = false;
 
     public static PlayerInputManager Instance { get; private set; }
 
@@ -79,6 +80,7 @@ public class PlayerInputManager : MonoBehaviour
             playerControls.Player.Crouch.performed += (ctx) => dodgeInput = true;
             playerControls.Player.Sprint.performed += (ctx) => sprintInput = true;
             playerControls.Player.Sprint.canceled += (ctx) => sprintInput = false;
+            playerControls.Player.Walk.performed += (ctx) => walkInput = !walkInput;
 
 
             playerControls.Enable();
@@ -99,6 +101,7 @@ public class PlayerInputManager : MonoBehaviour
         HandleCameraMovementInput();
         HandleDodgeInput();
         HandleSprinting();
+        HandleWalking();
     }
     private void HandlePlayerMovementInput()
     {
@@ -107,14 +110,10 @@ public class PlayerInputManager : MonoBehaviour
         playerVerticalInput = playerMovementInput.y;
         playerHorizontalInput = playerMovementInput.x;
         playerMoveAmount = Mathf.Clamp01(Mathf.Abs(playerHorizontalInput) + Mathf.Abs(playerVerticalInput));
-
-
-        if (player.playerAnimator != null)
+        if (!walkInput && playerMoveAmount > 0)
         {
-            player.playerAnimator.UpdateMovementParameters(0, playerMoveAmount, player.playerNetwork.GetIsSprinting());
+            playerMoveAmount = 2;
         }
-
-
     }
     private void HandleCameraMovementInput()
     {
@@ -138,6 +137,17 @@ public class PlayerInputManager : MonoBehaviour
         else
         {
             player.characterNetwork.SetIsSprinting(false);
+        }
+    }
+    private void HandleWalking()
+    {
+        if (walkInput)
+        {
+            player.characterNetwork.SetIsWalking(true);
+        }
+        else
+        {
+            player.characterNetwork.SetIsWalking(false);
         }
     }
 

@@ -303,6 +303,7 @@ GameObject:
   - component: {fileID: 5558485461933526176}
   - component: {fileID: 2180258896288400094}
   - component: {fileID: -6434159218875304126}
+  - component: {fileID: 4610051717729779230}
   - component: {fileID: 2778290265798584728}
   m_Layer: 0
   m_Name: Player
@@ -398,6 +399,8 @@ MonoBehaviour:
   applyRootMotion: 0
   playerLocoMotion: {fileID: 0}
   playerAnimator: {fileID: 0}
+  playerNetwork: {fileID: 0}
+  playerStats: {fileID: 0}
 --- !u!114 &1828295966867136529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -415,7 +418,9 @@ MonoBehaviour:
   moveAmount: 0
   walkingSpeed: 2
   runningSpeed: 5
+  spritingSpeed: 6.5
   rotationSpeed: 10
+  sprintingStaminaCost: 2
 --- !u!114 &-3254467698988339150
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -432,6 +437,12 @@ MonoBehaviour:
   networkPositionVelocity: {x: 0, y: 0, z: 0}
   networkMovementSmoothTimer: 0.1
   networkRotationSmoothTimer: 0.1
+  endurance:
+    m_InternalValue: 10
+  currentStamina:
+    m_InternalValue: 0
+  maxStamina:
+    m_InternalValue: 0
 --- !u!143 &7433870203906628373
 CharacterController:
   m_ObjectHideFlags: 0
@@ -517,6 +528,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c55f91f614b7a97498ff4ede2f552f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4610051717729779230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773795917509556872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57f4c04b805c6384ab1a41aa16d9c3c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  staminaRegenerateDelay: 2
+  staminaStickTimer: 0
+  staminaRegenerateAmount: 2
 --- !u!82 &2778290265798584728
 AudioSource:
   m_ObjectHideFlags: 0

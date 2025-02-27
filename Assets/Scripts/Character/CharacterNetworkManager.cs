@@ -21,6 +21,18 @@ public class CharacterNetworkManager : NetworkBehaviour
     [Header("Flags")]
     private NetworkVariable<bool> isSprinting = new NetworkVariable<bool>(false,
         NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    private NetworkVariable<bool> isWalking = new NetworkVariable<bool>(false,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+    public NetworkVariable<int> endurance = new NetworkVariable<int>(1,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<float> currentStamina = new NetworkVariable<float>(0,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+    public NetworkVariable<int> maxStamina = new NetworkVariable<int>(0,
+        NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+
     private CharacterManager characterManager;
 
     protected virtual void Awake()
@@ -65,6 +77,10 @@ public class CharacterNetworkManager : NetworkBehaviour
     {
         isSprinting.Value = sprinting;
     }
+    public void SetIsWalking(bool walking)
+    {
+        isWalking.Value = walking;
+    }
 
     public float GetNetworkMoveAmount()
     {
@@ -81,6 +97,10 @@ public class CharacterNetworkManager : NetworkBehaviour
     public bool GetIsSprinting()
     {
         return isSprinting.Value;
+    }
+    public bool GetIsWalking()
+    {
+        return isWalking.Value;
     }
 
 }

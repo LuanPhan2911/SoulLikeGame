@@ -8,13 +8,21 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
     [HideInInspector] public float moveAmount;
 
     private Vector3 moveDirection;
-    [SerializeField] private float walkingSpeed = 4f;
-    [SerializeField] private float runningSpeed = 6.5f;
+    [SerializeField] private float walkingSpeed = 2f;
+    [SerializeField] private float runningSpeed = 4f;
+    [SerializeField] private float spritingSpeed = 6.5f;
     [SerializeField] private float rotationSpeed = 10f;
+    [SerializeField] private float sprintingStaminaCost = 2;
 
     private Vector3 targetRotationDirection;
     [Header("Dodge Parameters")]
     private Vector3 rollDirection;
+    [SerializeField] private float dodgeStaminaCost = 25f;
+
+    [Header("Animation")]
+    private const string ROLL_FORWARD_01 = "Roll_Forward_01";
+    private const string BACK_STEP_01 = "Back_Step_01";
+
 
     override protected void Awake()
     {
@@ -36,7 +44,9 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
             horizontalMovement = player.characterNetwork.GetHorizontalParameter();
             verticalMovement = player.characterNetwork.GetVerticalParameter();
 
-            player.playerAnimator.UpdateMovementParameters(0, moveAmount, player.playerNetwork.GetIsSprinting());
+            player.playerAnimator.UpdateMovementParameters(0, moveAmount,
+                player.playerNetwork.GetIsSprinting(),
+                player.playerNetwork.GetIsWalking());
         }
 
     }
@@ -44,7 +54,7 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
     public void HandleAllMovement()
     {
 
-        HandleGroundMovement();
+        HandleGroundedMovement();
         HandleRotation();
     }
     private void GetVerticalAndHorizontalInput()
@@ -53,7 +63,7 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         horizontalMovement = PlayerInputManager.Instance.GetPlayerHorizontalInput();
         moveAmount = PlayerInputManager.Instance.GetPlayerMoveAmount();
     }
-    private void HandleGroundMovement()
+    private void HandleGroundedMovement()
     {
         if (!player.canMove)
         {
@@ -68,15 +78,23 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
 
         if (player.characterNetwork.GetIsSprinting())
         {
-            player.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
+            player.characterController.Move(moveDirection * spritingSpeed * Time.deltaTime);
         }
         else
         {
-            if (PlayerInputManager.Instance.GetPlayerMoveAmount() >= 1f)
+            if (player.characterNetwork.GetIsWalking())
             {
                 player.characterController.Move(moveDirection * walkingSpeed * Time.deltaTime);
             }
+            else if (moveAmount >= 2f)
+            {
+                player.characterController.Move(moveDirection * runningSpeed * Time.deltaTime);
+            }
         }
+
+        player.playerAnimator.UpdateMovementParameters(0, moveAmount,
+            player.playerNetwork.GetIsSprinting(),
+            player.playerNetwork.GetIsWalking());
 
 
 
@@ -106,6 +124,10 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         {
             return;
         }
+        if (player.characterNetwork.currentStamina.Value <= 0)
+        {
+            return;
+        }
         if (PlayerInputManager.Instance.GetPlayerMoveAmount() > 0)
         {
             rollDirection = PlayerCamera.Instance.cameraObject.transform.forward * verticalMovement;
@@ -117,13 +139,14 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
             player.transform.rotation = playerRotation;
             // perform roll animation
 
-            player.playerAnimator.PlayerTargetActionAnimation("Roll_Forward_01", true, true);
+            player.playerAnimator.PlayerTargetActionAnimation(ROLL_FORWARD_01, true, true);
         }
         else
         {
-            player.playerAnimator.PlayerTargetActionAnimation("Back_Step_01", true, true);
+            player.playerAnimator.PlayerTargetActionAnimation(BACK_STEP_01, true, true);
             // perform backstep animation
         }
+        player.characterNetwork.currentStamina.Value -= dodgeStaminaCost;
     }
     public void HandleSprinting()
     {
@@ -131,11 +154,15 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         {
             // set spriting to false
             player.characterNetwork.SetIsSprinting(false);
-
         }
 
 
         // if out of stamina, set sprinting to false
+        if (player.characterNetwork.currentStamina.Value <= 0)
+        {
+            player.characterNetwork.SetIsSprinting(false);
+            return;
+        }
 
         //if is moving set sprinting to true
         if (moveAmount >= 1f)
@@ -148,5 +175,11 @@ public class PlayerLocoMotionManager : CharacterLocoMotionManager
         }
 
         // if is stationary set sprinting to false
+        if (player.playerNetwork.GetIsSprinting())
+        {
+            player.characterNetwork.currentStamina.Value -= sprintingStaminaCost * Time.deltaTime;
+        }
+
     }
+
 }

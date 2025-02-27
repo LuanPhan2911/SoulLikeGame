@@ -26,6 +26,7 @@ public class WorldSaveGameManager : MonoBehaviour
     private void Start()
     {
         Application.targetFrameRate = targetFrameRate;
+
     }
 
     public IEnumerator LoadNewGame()
